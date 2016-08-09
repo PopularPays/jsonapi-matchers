@@ -17,15 +17,38 @@ module Jsonapi
       end
 
       def matches?(target)
-        @target = JSON.parse(target)
-        @target[@location].try(:[], "id") == @expected.id
-      rescue => e
-        @failure_message = "Expect response to be json string but was #{target.inspect}"
-        false
+        begin
+          @target = JSON.parse(target)
+        rescue
+          @failure_message = "Expected response to be json string but was #{target.inspect}"
+          return false
+        end
+
+        case @location
+        when 'data'
+          target_location = @target[@location]
+        when 'included'
+          target_location = @target[@location]
+        when 'relationships'
+          target_location = @target['data'].try(:[], @location)
+        else
+          @failure_message = "#{@location} is not a supported value"
+          return false
+        end
+
+        case target_location
+        when Array
+          return target_location.any?{|t| t["id"] == @expected.id}
+        when Hash
+          return target_location["id"] == @expected.id
+        else
+          @failure_message = "Expected value of #{@location} to be an Array or Hash but was #{target.inspect}"
+          return false
+        end
       end
 
       def failure_message
-        @failure_message || "expected object with an id of '#{@expected.id}' be included in #{@target.as_json.ai}"
+        @failure_message || "expected object with an id of '#{@expected.id}' to be included in #{@target.as_json.ai}"
       end
     end
 
@@ -34,7 +57,7 @@ module Jsonapi
         if target.is_a?(ActionController::TestResponse)
           super(target.body)
         else
-          @failure_message = "Expect response to be ActionController::TestResponse with a body but was #{target.inspect}"
+          @failure_message = "Expected response to be ActionController::TestResponse with a body but was #{target.inspect}"
           false
         end
       end
