@@ -17,7 +17,7 @@ describe Jsonapi::Matchers::Response do
   let(:record) { double(:record, {id: id}) }
 
   context 'expected is not a request object' do
-    let(:subject) { include(record) }
+    let(:subject) { include_record(record) }
     let(:response) { {} }
 
     before do
@@ -30,7 +30,7 @@ describe Jsonapi::Matchers::Response do
   end
 
   context 'expected is not a json body' do
-    let(:subject) { include(record) }
+    let(:subject) { include_record(record) }
     let(:response) { ActionController::TestResponse.new(response_data.to_json) }
     let(:response_data) { nil }
 
@@ -44,7 +44,7 @@ describe Jsonapi::Matchers::Response do
   end
 
   context 'checks unknown key' do
-    let(:subject) { include(record).in(:whaaattt) }
+    let(:subject) { include_record(record).in(:whaaattt) }
     let(:response) { ActionController::TestResponse.new(response_data.to_json) }
     let(:response_data) { {} }
 
@@ -58,7 +58,7 @@ describe Jsonapi::Matchers::Response do
   end
 
   context 'checks :included' do
-    let(:subject) { include(record).in(:included) }
+    let(:subject) { include_record(record).in(:included) }
     let(:response) { ActionController::TestResponse.new(response_data.to_json) }
     let(:response_data) do
       {
@@ -91,7 +91,7 @@ describe Jsonapi::Matchers::Response do
   end
 
   context 'checks :data' do
-    let(:subject) { include(record) }
+    let(:subject) { include_record(record) }
     let(:response) { ActionController::TestResponse.new(response_data.to_json) }
 
     context 'data is an array' do

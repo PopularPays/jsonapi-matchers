@@ -23,7 +23,7 @@ Or install it yourself as:
 #### For ensuring correct records are in the response
 
 ```
-expect(response).to include(record)
+expect(response).to include_record(record)
 ```
 
 ```
@@ -37,7 +37,7 @@ RSpec.describe BooksController do
   end
 
   it "responds with the correct book" do
-    expect(response).to include(book)
+    expect(response).to include_record(book)
   end
 end
 ```
@@ -48,7 +48,7 @@ end
 #### Supports checking the `included` resources
 
 ```
-expect(response).to include(record).in(:included)
+expect(response).to include_record(record).in(:included)
 ```
 
 ```
@@ -64,12 +64,12 @@ RSpec.describe BooksController do
   end
 
   it "includes the author" do
-    expect(response).to include(author).in(:included)
+    expect(response).to include_record(author).in(:included)
   end
 
   it "includes the correct books" do
-    expect(response).to include(book1)
-    expect(response).to include(book2)
+    expect(response).to include_record(book1)
+    expect(response).to include_record(book2)
   end
 end
 ```
