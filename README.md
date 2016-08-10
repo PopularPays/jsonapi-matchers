@@ -7,16 +7,12 @@ A gem for testing the presence of specific resources in a json api response. Che
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'jsonapi-matchers'
+gem 'jsonapi-matchers', github: 'PopularPays/jsonapi-matchers'
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install jsonapi-matchers
 
 ## Usage
 
