@@ -15,9 +15,9 @@ describe Jsonapi::Matchers::Response do
 
   let(:id) { }
   let(:record) { double(:record, {id: id}) }
-  let(:subject) { include(record) }
 
   context 'expected is not a request object' do
+    let(:subject) { include(record) }
     let(:response) { {} }
 
     before do
@@ -29,85 +29,131 @@ describe Jsonapi::Matchers::Response do
     end
   end
 
-  context 'expected is a request object' do
+  context 'expected is not a json body' do
+    let(:subject) { include(record) }
     let(:response) { ActionController::TestResponse.new(response_data.to_json) }
+    let(:response_data) { nil }
 
-    context 'expected is not a json body' do
-      let(:response_data) { nil }
+    before do
+      subject.matches?(response)
+    end
 
-      before do
-        subject.matches?(response)
-      end
+    it 'tells you that the response body is not json' do
+      expect(subject.failure_message).to eq("Expected response to be json string but was \"null\"")
+    end
+  end
 
-      it 'tells you that the response body is not json' do
-        expect(subject.failure_message).to eq("Expected response to be json string but was \"null\"")
+  context 'checks unknown key' do
+    let(:subject) { include(record).in(:whaaattt) }
+    let(:response) { ActionController::TestResponse.new(response_data.to_json) }
+    let(:response_data) { {} }
+
+    before do
+      subject.matches?(response)
+    end
+
+    it 'tells you that the response is not an ActionController::TestResponse' do
+      expect(subject.failure_message).to eq("whaaattt is not a supported value")
+    end
+  end
+
+  context 'checks :included' do
+    let(:subject) { include(record).in(:included) }
+    let(:response) { ActionController::TestResponse.new(response_data.to_json) }
+    let(:response_data) do
+      {
+        included: [{
+          id: '3'
+        }]
+      }
+    end
+
+    context 'record is found' do
+      let(:id) { '3' }
+
+      it 'matches' do
+        expect(subject.matches?(response)).to eq true
       end
     end
 
-    context 'specifying inclusion location' do
-      context 'data' do
-        context 'array' do
-          let(:response_data) do
-            {
-              data: [{
-                id: '3'
-              }]
-            }
-          end
+    context 'record is not found' do
+      let(:id) { 'other_value' }
 
-          context 'record is found' do
-            let(:id) { '3' }
+      it 'does not match' do
+        expect(subject.matches?(response)).to eq false
+      end
 
-            it 'matches' do
-              expect(subject.matches?(response)).to eq true
-            end
-          end
+      it 'says the id is not in the response' do
+        subject.matches?(response)
+        expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
+      end
+    end
+  end
 
-          context 'record is not found' do
-            let(:id) { 'other_value' }
+  context 'checks :data' do
+    let(:subject) { include(record) }
+    let(:response) { ActionController::TestResponse.new(response_data.to_json) }
 
-            it 'does not match' do
-              expect(subject.matches?(response)).to eq false
-            end
+    context 'data is an array' do
+      let(:response_data) do
+        {
+          data: [{
+            id: '3'
+          }]
+        }
+      end
 
-            it 'says the id is not in the response' do
-              subject.matches?(response)
-              expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
-            end
-          end
+      context 'record is found' do
+        let(:id) { '3' }
+
+        it 'matches' do
+          expect(subject.matches?(response)).to eq true
+        end
+      end
+
+      context 'record is not found' do
+        let(:id) { 'other_value' }
+
+        it 'does not match' do
+          expect(subject.matches?(response)).to eq false
         end
 
-        context 'object' do
-          let(:response_data) do
-            {
-              data: {
-                id: '3'
-              }
-            }
-          end
+        it 'says the id is not in the response' do
+          subject.matches?(response)
+          expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
+        end
+      end
+    end
 
-          let(:record) { double(:record, {id: id}) }
+    context 'data is an object' do
+      let(:response_data) do
+        {
+          data: {
+            id: '3'
+          }
+        }
+      end
 
-          context 'record is found' do
-            let(:id) { '3' }
+      let(:record) { double(:record, {id: id}) }
 
-            it 'matches' do
-              expect(subject.matches?(response)).to eq true
-            end
-          end
+      context 'record is found' do
+        let(:id) { '3' }
 
-          context 'record is not found' do
-            let(:id) { 'other_value' }
+        it 'matches' do
+          expect(subject.matches?(response)).to eq true
+        end
+      end
 
-            it 'does not match' do
-              expect(subject.matches?(response)).to eq false
-            end
+      context 'record is not found' do
+        let(:id) { 'other_value' }
 
-            it 'says the id is not in the response' do
-              subject.matches?(response)
-              expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
-            end
-          end
+        it 'does not match' do
+          expect(subject.matches?(response)).to eq false
+        end
+
+        it 'says the id is not in the response' do
+          subject.matches?(response)
+          expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
         end
       end
     end

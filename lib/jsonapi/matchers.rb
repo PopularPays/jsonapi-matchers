@@ -29,8 +29,6 @@ module Jsonapi
           target_location = @target[@location]
         when 'included'
           target_location = @target[@location]
-        when 'relationships'
-          target_location = @target['data'].try(:[], @location)
         else
           @failure_message = "#{@location} is not a supported value"
           return false
