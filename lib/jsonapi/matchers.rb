@@ -62,13 +62,13 @@ module Jsonapi
     end
 
     module Response
-      def include(expected)
+      def include_record(expected)
         IncludedInResponse.new(expected)
       end
     end
 
     module String
-      def include(expected)
+      def include_record(expected)
         IncludedInString.new(expected)
       end
     end
