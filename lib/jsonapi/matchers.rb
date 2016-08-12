@@ -5,15 +5,10 @@ require 'awesome_print'
 module Jsonapi
   module Matchers
     class IncludedInString
-      def initialize(expected)
+      def initialize(expected, location)
         @expected = expected
-        @location = 'data'
+        @location = location
         @failure_message = nil
-      end
-
-      def in(location)
-        @location = location.to_s
-        self
       end
 
       def matches?(target)
@@ -29,9 +24,6 @@ module Jsonapi
           target_location = @target[@location]
         when 'included'
           target_location = @target[@location]
-        else
-          @failure_message = "#{@location} is not a supported value"
-          return false
         end
 
         case target_location
@@ -62,14 +54,22 @@ module Jsonapi
     end
 
     module Response
+      def have_record(expected)
+        IncludedInResponse.new(expected, 'data')
+      end
+
       def include_record(expected)
-        IncludedInResponse.new(expected)
+        IncludedInResponse.new(expected, 'included')
       end
     end
 
     module String
+      def have_record(expected)
+        IncludedInString.new(expected, 'data')
+      end
+
       def include_record(expected)
-        IncludedInString.new(expected)
+        IncludedInString.new(expected, 'included')
       end
     end
   end

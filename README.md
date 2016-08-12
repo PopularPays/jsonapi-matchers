@@ -19,7 +19,7 @@ And then execute:
 #### For ensuring correct records are in the response
 
 ```
-expect(response).to include_record(record)
+expect(response).to have_record(record)
 ```
 
 ```
@@ -33,7 +33,7 @@ RSpec.describe BooksController do
   end
 
   it "responds with the correct book" do
-    expect(response).to include_record(book)
+    expect(response).to have_record(book)
   end
 end
 ```
@@ -44,7 +44,7 @@ end
 #### Supports checking the `included` resources
 
 ```
-expect(response).to include_record(record).in(:included)
+expect(response).to include_record(record)
 ```
 
 ```
@@ -60,12 +60,12 @@ RSpec.describe BooksController do
   end
 
   it "includes the author" do
-    expect(response).to include_record(author).in(:included)
+    expect(response).to include_record(author)
   end
 
-  it "includes the correct books" do
-    expect(response).to include_record(book1)
-    expect(response).to include_record(book2)
+  it "has the correct books" do
+    expect(response).to have_record(book1)
+    expect(response).to have_record(book2)
   end
 end
 ```
