@@ -1,6 +1,8 @@
 module Jsonapi
   module Matchers
-    class RecordIncludedInHash
+    class RecordIncluded
+      include Jsonapi::Matchers::Shared
+
       def initialize(expected, location)
         @expected = expected
         @location = location
@@ -8,7 +10,8 @@ module Jsonapi
       end
 
       def matches?(target)
-        @target = target
+        @target = normalize_target(target)
+        return false unless @target
 
         case @location
         when 'data'
@@ -33,41 +36,13 @@ module Jsonapi
       end
     end
 
-    class RecordIncludedInResponse < RecordIncludedInHash
-      def matches?(target)
-        if target.is_a?(ActionController::TestResponse)
-          begin
-            hash = JSON.parse(target.body)
-          rescue => e
-            @failure_message = "Expected response to be json string but was #{target.body.inspect}"
-            return false
-          end
-
-          super(hash)
-        else
-          @failure_message = "Expected response to be ActionController::TestResponse with a body but was #{target.inspect}"
-          false
-        end
-      end
-    end
-
-    module Response
+    module Record
       def have_record(expected)
-        RecordIncludedInResponse.new(expected, 'data')
+        RecordIncluded.new(expected, 'data')
       end
 
       def include_record(expected)
-        RecordIncludedInResponse.new(expected, 'included')
-      end
-    end
-
-    module Hash
-      def have_record(expected)
-        RecordIncludedInHash.new(expected, 'data')
-      end
-
-      def include_record(expected)
-        RecordIncludedInHash.new(expected, 'included')
+        RecordIncluded.new(expected, 'included')
       end
     end
   end
