@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Jsonapi::Matchers::Response do
+describe 'record included' do
   include Jsonapi::Matchers::Response
 
   module ActionController

@@ -1,6 +1,6 @@
 module Jsonapi
   module Matchers
-    class RecordIncludedInString
+    class RecordIncludedInHash
       def initialize(expected, location)
         @expected = expected
         @location = location
@@ -8,12 +8,7 @@ module Jsonapi
       end
 
       def matches?(target)
-        begin
-          @target = JSON.parse(target)
-        rescue
-          @failure_message = "Expected response to be json string but was #{target.inspect}"
-          return false
-        end
+        @target = target
 
         case @location
         when 'data'
@@ -24,9 +19,9 @@ module Jsonapi
 
         case target_location
         when Array
-          return target_location.any?{|t| t["id"] == @expected.id}
-        when Hash
-          return target_location["id"] == @expected.id
+          return target_location.any?{|t| t.with_indifferent_access["id"] == @expected.id}
+        when ::Hash
+          return target_location.with_indifferent_access["id"] == @expected.id
         else
           @failure_message = "Expected value of #{@location} to be an Array or Hash but was #{target.inspect}"
           return false
@@ -38,10 +33,17 @@ module Jsonapi
       end
     end
 
-    class RecordIncludedInResponse < RecordIncludedInString
+    class RecordIncludedInResponse < RecordIncludedInHash
       def matches?(target)
         if target.is_a?(ActionController::TestResponse)
-          super(target.body)
+          begin
+            hash = JSON.parse(target.body)
+          rescue => e
+            @failure_message = "Expected response to be json string but was #{target.body.inspect}"
+            return false
+          end
+
+          super(hash)
         else
           @failure_message = "Expected response to be ActionController::TestResponse with a body but was #{target.inspect}"
           false
@@ -56,6 +58,16 @@ module Jsonapi
 
       def include_record(expected)
         RecordIncludedInResponse.new(expected, 'included')
+      end
+    end
+
+    module Hash
+      def have_record(expected)
+        RecordIncludedInHash.new(expected, 'data')
+      end
+
+      def include_record(expected)
+        RecordIncludedInHash.new(expected, 'included')
       end
     end
   end

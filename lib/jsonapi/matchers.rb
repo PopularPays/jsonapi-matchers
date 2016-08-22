@@ -1,4 +1,4 @@
-require "active_support/json"
+require "active_support/all"
 require 'awesome_print'
 require "jsonapi/matchers/version"
 require "jsonapi/matchers/record_included"
