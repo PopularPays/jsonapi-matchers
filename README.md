@@ -113,7 +113,7 @@ RSpec.describe BooksController do
     expect(response).to have_attribute('name')
   end
 
-  it "includes the correct attribute valye" do
+  it "includes the correct attribute value" do
     expect(response).to have_attribute('name').with_value('Moby Dick')
   end
 end

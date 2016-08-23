@@ -29,7 +29,7 @@ describe Jsonapi::Matchers::RecordIncluded do
     end
 
     it 'tells you that the response body is not json' do
-      expect(subject.failure_message).to eq("Expected response to be json string but was \"null\"")
+      expect(subject.failure_message).to eq("Expected response to be json string but was \"null\". JSON::ParserError - 757: unexpected token at 'null'")
     end
   end
 

@@ -6,7 +6,7 @@ module Jsonapi
           begin
             JSON.parse(target.body)
           rescue => e
-            @failure_message = "Expected response to be json string but was #{target.body.inspect}"
+            @failure_message = "Expected response to be json string but was #{target.body.inspect}. #{e.class} - #{e.message}"
             return
           end
         elsif target.is_a?(Hash)
