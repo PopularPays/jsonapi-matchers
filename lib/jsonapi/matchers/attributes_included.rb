@@ -19,9 +19,9 @@ module Jsonapi
         return false unless @target
 
         if @location
-          @target = target.try(:[], :data).try(:[], @location).with_indifferent_access
+          @target = @target.try(:[], :data).try(:[], @location)
         else
-          @target = target.try(:[], :data).with_indifferent_access
+          @target = @target.try(:[], :data)
         end
 
         @value = @target.try(:[], @attribute_name)
