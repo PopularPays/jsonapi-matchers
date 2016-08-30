@@ -10,6 +10,7 @@ module Jsonapi
       end
 
       def with_value(expected_value)
+        @check_value = true
         @expected_value = expected_value
         self
       end
@@ -26,8 +27,7 @@ module Jsonapi
 
         @value = @target.try(:[], @attribute_name)
 
-
-        if @expected_value
+        if @check_value
           if @expected_value.to_s == @value.to_s
             return true
           else
@@ -35,7 +35,7 @@ module Jsonapi
             return false
           end
         else
-          !!@value
+          @target.key?(@attribute_name)
         end
       end
 

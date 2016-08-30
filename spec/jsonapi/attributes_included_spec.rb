@@ -11,6 +11,12 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
       end
 
+      context 'key exists but value is nil' do
+        it 'matches' do
+          expect(have_attribute(:email).matches?(target)).to be_truthy
+        end
+      end
+
       context 'attribute is included' do
         subject { have_attribute(:address) }
 
@@ -41,6 +47,12 @@ describe Jsonapi::Matchers::AttributesIncluded do
           it 'tells you the expected attribute does not exist' do
             subject.matches?(target)
             expect(subject.failure_message).to eq("expected 'bad-name' for key 'name', but got 'cool-name'")
+          end
+        end
+
+        context 'value is explicitly nil' do
+          it 'matches' do
+            expect(have_attribute(:email).with_value(nil).matches?(target)).to be_truthy
           end
         end
 
@@ -110,6 +122,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
         attributes: {
           name: 'cool-name',
           phone_number: '18001111111',
+          email: nil
         }
       }
     }
