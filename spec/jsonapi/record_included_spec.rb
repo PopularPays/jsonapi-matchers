@@ -1,31 +1,21 @@
 require 'spec_helper'
 
-describe Jsonapi::Matchers::Response do
-  include Jsonapi::Matchers::Response
-
-  module ActionController
-    class TestResponse
-      attr_accessor :body
-
-      def initialize(body)
-        self.body = body
-      end
-    end
-  end
+describe Jsonapi::Matchers::RecordIncluded do
+  include Jsonapi::Matchers::Record
 
   let(:id) { }
   let(:record) { double(:record, {id: id}) }
 
   context 'expected is not a request object' do
     let(:subject) { have_record(record) }
-    let(:response) { {} }
+    let(:response) { String.new }
 
     before do
       subject.matches?(response)
     end
 
     it 'tells you that the response is not an ActionController::TestResponse' do
-      expect(subject.failure_message).to eq("Expected response to be ActionController::TestResponse with a body but was {}")
+      expect(subject.failure_message).to eq("Expected response to be ActionController::TestResponse or hash but was \"\"")
     end
   end
 
@@ -39,7 +29,7 @@ describe Jsonapi::Matchers::Response do
     end
 
     it 'tells you that the response body is not json' do
-      expect(subject.failure_message).to eq("Expected response to be json string but was \"null\"")
+      expect(subject.failure_message).to eq("Expected response to be json string but was \"null\". JSON::ParserError - 757: unexpected token at 'null'")
     end
   end
 
