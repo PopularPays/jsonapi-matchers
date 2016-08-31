@@ -10,6 +10,7 @@ module Jsonapi
       end
 
       def with_value(expected_value)
+        @check_value = true
         @expected_value = expected_value
         self
       end
@@ -19,15 +20,14 @@ module Jsonapi
         return false unless @target
 
         if @location
-          @target = target.try(:[], :data).try(:[], @location).with_indifferent_access
+          @target = @target.try(:[], :data).try(:[], @location)
         else
-          @target = target.try(:[], :data).with_indifferent_access
+          @target = @target.try(:[], :data)
         end
 
         @value = @target.try(:[], @attribute_name)
 
-
-        if @expected_value
+        if @check_value
           if @expected_value.to_s == @value.to_s
             return true
           else
@@ -35,7 +35,7 @@ module Jsonapi
             return false
           end
         else
-          !!@value
+          @target.key?(@attribute_name)
         end
       end
 
