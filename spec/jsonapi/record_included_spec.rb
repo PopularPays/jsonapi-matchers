@@ -64,6 +64,7 @@ describe Jsonapi::Matchers::RecordIncluded do
         expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
       end
     end
+
   end
 
   context 'checks :data' do
@@ -130,6 +131,29 @@ describe Jsonapi::Matchers::RecordIncluded do
         it 'says the id is not in the response' do
           subject.matches?(response)
           expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
+        end
+      end
+
+      context 'handles negated failure cases' do
+        let(:id) { '3' }
+
+        it 'does not blow up' do
+          begin
+            expect(response).to_not have_record(record)
+          rescue NoMethodError => e
+            fail("Should be able to handle negated cases without throwing an error: " + e.to_s)
+          rescue RSpec::Expectations::ExpectationNotMetError
+          end
+        end
+
+        it 'shows a negated error message' do
+          @failure = nil
+          begin
+            expect(response).to_not have_record(record)
+          rescue RSpec::Expectations::ExpectationNotMetError => e
+            @failure = e.message
+          end
+          expect(@failure).to match(/expected object with an id of '3' to not be included in /)
         end
       end
     end

@@ -7,6 +7,7 @@ module Jsonapi
         @expected = expected
         @location = location
         @failure_message = nil
+        @failure_message_when_negated = nil
       end
 
       def matches?(target)
@@ -33,6 +34,10 @@ module Jsonapi
 
       def failure_message
         @failure_message || "expected object with an id of '#{@expected.id}' to be included in #{@target.as_json.ai}"
+      end
+
+      def failure_message_when_negated
+        @failure_message_when_negated || "expected object with an id of '#{@expected.id}' to not be included in #{@target.as_json.ai}"
       end
     end
 
