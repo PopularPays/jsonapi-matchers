@@ -120,7 +120,7 @@ end
 ```
 
 
-#### Supports ActionController::TestResponse and Hash
+#### Supports ActionDispatch::TestResponse, ActionController::TestResponse, and Hash
 
 ```
 expect(response).to have_id(book.id)
