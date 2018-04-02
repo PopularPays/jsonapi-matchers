@@ -141,7 +141,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
   end
 
   context 'target is an action controller response' do
-    let(:target) { ActionController::TestResponse.new(json_api_data.to_json) }
+    let(:target) { ActionDispatch::TestResponse.new(json_api_data.to_json) }
 
     it_should_behave_like 'attributes included matcher'
   end

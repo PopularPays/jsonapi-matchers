@@ -14,14 +14,14 @@ describe Jsonapi::Matchers::RecordIncluded do
       subject.matches?(response)
     end
 
-    it 'tells you that the response is not an ActionController::TestResponse' do
-      expect(subject.failure_message).to eq("Expected response to be ActionController::TestResponse or hash but was \"\"")
+    it 'tells you that the response is not an ActionDispatch::TestResponse' do
+      expect(subject.failure_message).to eq("Expected response to be ActionDispatch::TestResponse, ActionController::TestResponse, or hash but was \"\"")
     end
   end
 
   context 'expected is not a json body' do
     let(:subject) { have_record(record) }
-    let(:response) { ActionController::TestResponse.new(response_data.to_json) }
+    let(:response) { ActionDispatch::TestResponse.new(response_data.to_json) }
     let(:response_data) { nil }
 
     before do
@@ -35,7 +35,7 @@ describe Jsonapi::Matchers::RecordIncluded do
 
   context 'checks :included' do
     let(:subject) { include_record(record) }
-    let(:response) { ActionController::TestResponse.new(response_data.to_json) }
+    let(:response) { ActionDispatch::TestResponse.new(response_data.to_json) }
     let(:response_data) do
       {
         included: [{
@@ -69,7 +69,7 @@ describe Jsonapi::Matchers::RecordIncluded do
 
   context 'checks :data' do
     let(:subject) { have_record(record) }
-    let(:response) { ActionController::TestResponse.new(response_data.to_json) }
+    let(:response) { ActionDispatch::TestResponse.new(response_data.to_json) }
 
     context 'data is an array' do
       let(:response_data) do

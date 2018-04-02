@@ -3,7 +3,7 @@ require 'jsonapi/matchers'
 require 'pry'
 
 
-module ActionController
+module ActionDispatch
   class TestResponse
     attr_accessor :body
 
