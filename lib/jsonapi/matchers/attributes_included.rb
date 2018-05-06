@@ -34,28 +34,9 @@ module Jsonapi
         @value = @target.try(:[], @attribute_name)
 
         if @check_value
-          if @expected_value.to_s == @value.to_s
-            return true
-          else
-            @failure_message = "expected '#{@expected_value}' for key '#{@attribute_name}', but got '#{@value}'"
-            return false
-          end
+          value_exists?
         elsif @check_record
-          data = @value.try(:[], 'data')
-
-          if data.is_a?(Array)
-            if data.map{|d| d['id']}.include?(@expected_record_id)
-              return true
-            else
-              @failure_message = "expected '#{@expected_record_id}' to be the an id in relationship '#{@attribute_name}', but got '#{@value['data']}'"
-              return false
-            end
-          elsif @expected_record_id == @value.try(:[], 'data').try(:[], 'id')
-            return true
-          else
-            @failure_message = "expected '#{@expected_record_id}' to be the id for relationship '#{@attribute_name}', but got '#{@value}'"
-            return false
-          end
+          record_exists?
         else
           @target.key?(@attribute_name)
         end
@@ -63,6 +44,35 @@ module Jsonapi
 
       def failure_message
         @failure_message || "expected attribute '#{@attribute_name}' to be included in #{@target.as_json.ai}"
+      end
+
+      private
+
+      def value_exists?
+        if @expected_value.to_s == @value.to_s
+          true
+        else
+          @failure_message = "expected '#{@expected_value}' for key '#{@attribute_name}', but got '#{@value}'"
+          false
+        end
+      end
+
+      def record_exists?
+        data = @value.try(:[], 'data')
+
+        if data.is_a?(Array)
+          if data.map{|d| d['id']}.include?(@expected_record_id)
+            return true
+          else
+            @failure_message = "expected '#{@expected_record_id}' to be the an id in relationship '#{@attribute_name}', but got '#{@value['data']}'"
+            return false
+          end
+        elsif @expected_record_id == @value.try(:[], 'data').try(:[], 'id')
+          return true
+        else
+          @failure_message = "expected '#{@expected_record_id}' to be the id for relationship '#{@attribute_name}', but got '#{@value}'"
+          return false
+        end
       end
     end
 
