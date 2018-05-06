@@ -91,6 +91,10 @@ expect(response).to have_attribute('attribute_name').with_value('attribute_value
 ```
 
 ```ruby
+expect(response).to have_relationship('relationship_name')
+```
+
+```ruby
 RSpec.describe BooksController do
   include Jsonapi::Matchers::Attributes
 
@@ -115,6 +119,10 @@ RSpec.describe BooksController do
 
   it "includes the correct attribute value" do
     expect(response).to have_attribute('name').with_value('Moby Dick')
+  end
+
+  it "includes the relationship attribute" do
+    expect(response).to have_relationship('author')
   end
 end
 ```

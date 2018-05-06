@@ -112,6 +112,27 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
       end
     end
+
+    describe 'have_relationship' do
+      context 'relationship matches' do
+        it 'matches' do
+          expect(have_relationship('car').matches?(target)).to be_truthy
+        end
+      end
+
+      context 'relationship does not match' do
+        subject { have_relationship('monster_truck') }
+
+        it 'does not match' do
+          expect(subject.matches?(target)).to be_falsey
+        end
+
+        it 'tells you the expected attribute does not exist' do
+          subject.matches?(target)
+          expect(subject.failure_message).to match(/expected attribute 'monster_truck' to be included in/)
+        end
+      end
+    end
   end
 
   let(:json_api_data) do
@@ -123,6 +144,11 @@ describe Jsonapi::Matchers::AttributesIncluded do
           name: 'cool-name',
           phone_number: '18001111111',
           email: nil
+        },
+        relationships: {
+          car: {
+            data: { type: 'cars', id: 'some-car-id' }
+          }
         }
       }
     }

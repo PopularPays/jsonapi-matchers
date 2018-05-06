@@ -56,6 +56,10 @@ module Jsonapi
       def have_attribute(attribute_name)
         AttributesIncluded.new(attribute_name, :attributes)
       end
+
+      def have_relationship(relationship_name)
+        AttributesIncluded.new(relationship_name, :relationships)
+      end
     end
   end
 end
