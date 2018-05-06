@@ -99,6 +99,10 @@ expect(response).to have_relationship('relationship_name').with_value({'data' =>
 ```
 
 ```ruby
+expect(response).to have_relationship('relationship_name').with_record(record)
+```
+
+```ruby
 RSpec.describe BooksController do
   include Jsonapi::Matchers::Attributes
 
@@ -131,6 +135,10 @@ RSpec.describe BooksController do
 
   it "includes the relationship value" do
     expect(response).to have_relationship('house').with_value({'data' => nil})
+  end
+
+  it "includes the relationship record" do
+    expect(response).to have_relationship('author').with_record(author)
   end
 end
 ```

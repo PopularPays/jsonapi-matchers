@@ -192,6 +192,99 @@ describe Jsonapi::Matchers::AttributesIncluded do
           end
         end
       end
+
+      describe 'with_record' do
+        context 'record exists' do
+          let(:record) { OpenStruct.new(id: 'some-car-id') }
+
+          it 'matches' do
+            expect(have_relationship(:car).with_record(record).matches?(target)).to be_truthy
+          end
+        end
+
+        context 'record id does not match' do
+          let(:record) { OpenStruct.new(id: 'not-the-right-car-id') }
+
+          subject { have_relationship(:car).with_record(record) }
+
+          it 'does not match' do
+            expect(subject.matches?(target)).to be_falsey
+          end
+
+          it 'tells you the expected id does not exist' do
+            subject.matches?(target)
+            expect(subject.failure_message).to eq("expected 'not-the-right-car-id' to be the id for relationship 'car', but got '{\"data\"=>{\"type\"=>\"cars\", \"id\"=>\"some-car-id\"}}'")
+          end
+        end
+
+        context 'relationship is array and it matches' do
+          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+
+          it 'matches' do
+            expect(have_relationship(:chairs).with_record(record).matches?(target)).to be_truthy
+          end
+        end
+
+        context 'relationship is array and it does not match' do
+          let(:record) { OpenStruct.new(id: 'some-chair-id-3') }
+
+          subject { have_relationship(:chairs).with_record(record) }
+
+          it 'does not match' do
+            expect(subject.matches?(target)).to be_falsey
+          end
+
+          it 'tells you the relationship does not exist' do
+            subject.matches?(target)
+            expect(subject.failure_message).to match("expected 'some-chair-id-3' to be the an id in relationship 'chairs', but got")
+          end
+        end
+
+        context 'relationship does not have an id attribute' do
+          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+
+          subject { have_relationship(:house).with_record(record) }
+
+          it 'does not match' do
+            expect(subject.matches?(target)).to be_falsey
+          end
+
+          it 'tells you the expected attribute does not exist' do
+            subject.matches?(target)
+            expect(subject.failure_message).to eq("expected 'some-chair-id-1' to be the id for relationship 'house', but got '{\"data\"=>nil}'")
+          end
+        end
+
+        context 'relationship is nil' do
+          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+
+          subject { have_relationship(:plane).with_record(record) }
+
+          it 'does not match' do
+            expect(subject.matches?(target)).to be_falsey
+          end
+
+          it 'tells you the expected relationship does not exist' do
+            subject.matches?(target)
+            expect(subject.failure_message).to eq("expected 'some-chair-id-1' to be the id for relationship 'plane', but got ''")
+          end
+        end
+
+        context 'relationship does not exist' do
+          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+
+          subject { have_relationship(:does_not_exist).with_record(record) }
+
+          it 'does not match' do
+            expect(subject.matches?(target)).to be_falsey
+          end
+
+          it 'tells you the expected relationship does not exist' do
+            subject.matches?(target)
+            expect(subject.failure_message).to eq("expected 'some-chair-id-1' to be the id for relationship 'does_not_exist', but got ''")
+          end
+        end
+      end
     end
   end
 
@@ -212,7 +305,13 @@ describe Jsonapi::Matchers::AttributesIncluded do
           house: {
             data: nil
           },
-          plane: nil
+          plane: nil,
+          chairs: {
+            data: [
+              { type: 'chairs', id: 'some-chair-id-1' },
+              { type: 'chairs', id: 'some-chair-id-2' }
+            ]
+          }
         }
       }
     }

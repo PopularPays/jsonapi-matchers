@@ -15,6 +15,12 @@ module Jsonapi
         self
       end
 
+      def with_record(expected_record)
+        @check_record = true
+        @expected_record_id = expected_record.id
+        self
+      end
+
       def matches?(target)
         @target = normalize_target(target)
         return false unless @target
@@ -32,6 +38,22 @@ module Jsonapi
             return true
           else
             @failure_message = "expected '#{@expected_value}' for key '#{@attribute_name}', but got '#{@value}'"
+            return false
+          end
+        elsif @check_record
+          data = @value.try(:[], 'data')
+
+          if data.is_a?(Array)
+            if data.map{|d| d['id']}.include?(@expected_record_id)
+              return true
+            else
+              @failure_message = "expected '#{@expected_record_id}' to be the an id in relationship '#{@attribute_name}', but got '#{@value['data']}'"
+              return false
+            end
+          elsif @expected_record_id == @value.try(:[], 'data').try(:[], 'id')
+            return true
+          else
+            @failure_message = "expected '#{@expected_record_id}' to be the id for relationship '#{@attribute_name}', but got '#{@value}'"
             return false
           end
         else
