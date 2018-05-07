@@ -236,7 +236,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
 
           it 'tells you the relationship does not exist' do
             subject.matches?(target)
-            expect(subject.failure_message).to match("expected 'some-chair-id-3' to be the an id in relationship 'chairs', but got")
+            expect(subject.failure_message).to match("expected 'some-chair-id-3' to be an id in relationship 'chairs', but got")
           end
         end
 

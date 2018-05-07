@@ -64,7 +64,7 @@ module Jsonapi
           if data.map{|d| d['id']}.include?(@expected_record_id)
             return true
           else
-            @failure_message = "expected '#{@expected_record_id}' to be the an id in relationship '#{@attribute_name}', but got '#{@value['data']}'"
+            @failure_message = "expected '#{@expected_record_id}' to be an id in relationship '#{@attribute_name}', but got '#{@value['data']}'"
             return false
           end
         elsif @expected_record_id == @value.try(:[], 'data').try(:[], 'id')
