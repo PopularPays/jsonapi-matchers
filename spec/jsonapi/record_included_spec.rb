@@ -64,7 +64,6 @@ describe Jsonapi::Matchers::RecordIncluded do
         expect(subject.failure_message).to match(/expected object with an id of 'other_value' to be included in /)
       end
     end
-
   end
 
   context 'checks :data' do
@@ -85,6 +84,14 @@ describe Jsonapi::Matchers::RecordIncluded do
 
         it 'matches' do
           expect(subject.matches?(response)).to eq true
+        end
+
+        context 'the record id is not a string' do
+          let(:id) { 3 }
+
+          it 'matches' do
+            expect(subject.matches?(response)).to eq true
+          end
         end
       end
 
@@ -118,6 +125,14 @@ describe Jsonapi::Matchers::RecordIncluded do
 
         it 'matches' do
           expect(subject.matches?(response)).to eq true
+        end
+
+        context 'the record id is not a string' do
+          let(:id) { 3 }
+
+          it 'matches' do
+            expect(subject.matches?(response)).to eq true
+          end
         end
       end
 
