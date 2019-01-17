@@ -23,9 +23,9 @@ module Jsonapi
 
         case target_location
         when Array
-          return target_location.any?{|t| t.with_indifferent_access["id"] == @expected.id}
+          return target_location.any?{ |t| t.with_indifferent_access["id"] == @expected.id.to_s }
         when ::Hash
-          return target_location.with_indifferent_access["id"] == @expected.id
+          return target_location.with_indifferent_access["id"] == @expected.id.to_s
         else
           @failure_message = "Expected value of #{@location} to be an Array or Hash but was #{target.inspect}"
           return false
