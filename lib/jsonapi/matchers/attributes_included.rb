@@ -17,7 +17,7 @@ module Jsonapi
 
       def with_record(expected_record)
         @check_record = true
-        @expected_record_id = expected_record.id
+        @expected_record_id = expected_record.id.to_s
         self
       end
 
