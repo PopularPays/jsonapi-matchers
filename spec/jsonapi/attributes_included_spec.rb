@@ -200,6 +200,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
           it 'matches' do
             expect(have_relationship(:car).with_record(record).matches?(target)).to be_truthy
           end
+
+          context 'the record id is not a string' do
+            let(:record) { OpenStruct.new(id: 3) }
+
+            it 'matches' do
+              expect(have_relationship(:bike).with_record(record).matches?(target)).to be_truthy
+            end
+          end
         end
 
         context 'record id does not match' do
@@ -222,6 +230,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
 
           it 'matches' do
             expect(have_relationship(:chairs).with_record(record).matches?(target)).to be_truthy
+          end
+
+          context 'the record id is not a string' do
+            let(:record) { OpenStruct.new(id: 4) }
+
+            it 'matches' do
+              expect(have_relationship(:telephones).with_record(record).matches?(target)).to be_truthy
+            end
           end
         end
 
@@ -302,6 +318,9 @@ describe Jsonapi::Matchers::AttributesIncluded do
           car: {
             data: { type: 'cars', id: 'some-car-id' }
           },
+          bike: {
+            data: { type: 'bikes', id: '3' }
+          },
           house: {
             data: nil
           },
@@ -310,6 +329,12 @@ describe Jsonapi::Matchers::AttributesIncluded do
             data: [
               { type: 'chairs', id: 'some-chair-id-1' },
               { type: 'chairs', id: 'some-chair-id-2' }
+            ]
+          },
+          telephones: {
+            data: [
+              { type: 'telephone', id: '4' },
+              { type: 'telephone', id: '5' }
             ]
           }
         }
