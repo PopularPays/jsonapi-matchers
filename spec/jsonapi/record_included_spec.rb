@@ -6,6 +6,10 @@ describe Jsonapi::Matchers::RecordIncluded do
   let(:id) { }
   let(:record) { double(:record, {id: id}) }
 
+  it 'sets the description correctly' do
+    expect(described_class.new('foo', 'data', 'matcher description').description).to eq('matcher description')
+  end
+
   context 'expected is not a request object' do
     let(:subject) { have_record(record) }
     let(:response) { String.new }
