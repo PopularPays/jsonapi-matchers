@@ -3,8 +3,16 @@ require 'spec_helper'
 describe Jsonapi::Matchers::AttributesIncluded do
   include Jsonapi::Matchers::Attributes
 
+  it 'sets the description correctly' do
+    expect(described_class.new('foo', 'bar', 'matcher description').description).to eq('matcher description')
+  end
+
   shared_examples_for 'attributes included matcher' do
     describe 'have_attribute' do
+      it 'has the correct description' do
+        expect(have_attribute('some-attr').description).to eq("have attribute: some-attr")
+      end
+
       context 'attribute is included' do
         it 'matches' do
           expect(have_attribute(:name).matches?(target)).to be_truthy
@@ -72,6 +80,10 @@ describe Jsonapi::Matchers::AttributesIncluded do
     end
 
     describe 'have_id' do
+      it 'has the correct description' do
+        expect(have_id('some-id').description).to eq("have id: some-id")
+      end
+
       context 'id matches' do
         it 'matches' do
           expect(have_id('some-id').matches?(target)).to be_truthy
@@ -93,6 +105,10 @@ describe Jsonapi::Matchers::AttributesIncluded do
     end
 
     describe 'have_type' do
+      it 'has the correct description' do
+        expect(have_type('some-type').description).to eq("have type: some-type")
+      end
+
       context 'type matches' do
         it 'matches' do
           expect(have_type('user').matches?(target)).to be_truthy
@@ -114,6 +130,10 @@ describe Jsonapi::Matchers::AttributesIncluded do
     end
 
     describe 'have_relationship' do
+      it 'has the correct description' do
+        expect(have_relationship('some-relationship').description).to eq("have relationship: some-relationship")
+      end
+
       context 'relationship is included' do
         it 'matches' do
           expect(have_relationship(:car).matches?(target)).to be_truthy

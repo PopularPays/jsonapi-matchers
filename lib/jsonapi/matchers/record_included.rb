@@ -3,11 +3,14 @@ module Jsonapi
     class RecordIncluded
       include Jsonapi::Matchers::Shared
 
-      def initialize(expected, location)
+      attr_reader :description
+
+      def initialize(expected, location, description)
         @expected = expected
         @location = location
         @failure_message = nil
         @failure_message_when_negated = nil
+        @description = description
       end
 
       def matches?(target)
@@ -43,11 +46,11 @@ module Jsonapi
 
     module Record
       def have_record(expected)
-        RecordIncluded.new(expected, 'data')
+        RecordIncluded.new(expected, 'data', 'have record')
       end
 
       def include_record(expected)
-        RecordIncluded.new(expected, 'included')
+        RecordIncluded.new(expected, 'included', 'include record')
       end
     end
   end

@@ -4,7 +4,8 @@ module Jsonapi
       def normalize_target(target)
         if test_response?(target)
           begin
-            JSON.parse(target.body).with_indifferent_access
+            parsed_body = JSON.parse(target.body)
+            parsed_body.with_indifferent_access
           rescue => e
             @failure_message = "Expected response to be json string but was #{target.body.inspect}. #{e.class} - #{e.message}"
             return

@@ -3,10 +3,13 @@ module Jsonapi
     class AttributesIncluded
       include Jsonapi::Matchers::Shared
 
-      def initialize(attribute_name, location)
+      attr_reader :description
+
+      def initialize(attribute_name, location, description)
         @attribute_name = attribute_name
         @location = location
         @failure_message = nil
+        @description = description
       end
 
       def with_value(expected_value)
@@ -78,19 +81,19 @@ module Jsonapi
 
     module Attributes
       def have_id(id)
-        AttributesIncluded.new('id', nil).with_value(id)
+        AttributesIncluded.new('id', nil, "have id: #{id}").with_value(id)
       end
 
       def have_type(type)
-        AttributesIncluded.new('type', nil).with_value(type)
+        AttributesIncluded.new('type', nil, "have type: #{type}").with_value(type)
       end
 
       def have_attribute(attribute_name)
-        AttributesIncluded.new(attribute_name, :attributes)
+        AttributesIncluded.new(attribute_name, :attributes, "have attribute: #{attribute_name}")
       end
 
       def have_relationship(relationship_name)
-        AttributesIncluded.new(relationship_name, :relationships)
+        AttributesIncluded.new(relationship_name, :relationships, "have relationship: #{relationship_name}")
       end
     end
   end
