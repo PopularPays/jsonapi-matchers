@@ -21,15 +21,15 @@ describe Jsonapi::Matchers::RecordIncluded do
 
   context 'expected is not a json body' do
     let(:subject) { have_record(record) }
-    let(:response) { ActionDispatch::TestResponse.new(response_data.to_json) }
-    let(:response_data) { nil }
+    let(:response) { ActionDispatch::TestResponse.new(response_data) }
+    let(:response_data) { '{' }
 
     before do
       subject.matches?(response)
     end
 
     it 'tells you that the response body is not json' do
-      expect(subject.failure_message).to match("Expected response to be json string but was \"null\". JSON::ParserError - 776: unexpected token at 'null'")
+      expect(subject.failure_message).to match("Expected response to be json string but was \"{\". JSON::ParserError - 765: unexpected token at '{'")
     end
   end
 
