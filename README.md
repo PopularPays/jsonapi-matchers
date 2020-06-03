@@ -57,7 +57,7 @@ RSpec.describe BooksController do
   let!(:book2) { create(:book, author: author) }
 
   before do
-    get :index
+    get :index, include: ['authors']
   end
 
   it "includes the author" do
