@@ -38,6 +38,15 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
       end
 
+      context 'matcher is negated and attribute is included' do
+        subject { have_attribute(:name) }
+
+        it 'tells you that the target should not contain the correct value but does' do
+          subject.matches?(target)
+          expect(subject.failure_message_when_negated).to match(/expected attribute 'name' not to be included in/)
+        end
+      end
+
       describe 'with_value' do
         context 'value exists' do
           it 'matches' do
@@ -55,6 +64,15 @@ describe Jsonapi::Matchers::AttributesIncluded do
           it 'tells you the expected attribute does not exist' do
             subject.matches?(target)
             expect(subject.failure_message).to eq("expected 'bad-name' for key 'name', but got 'cool-name'")
+          end
+        end
+
+        context 'matcher is negated and value exists' do
+          subject { have_attribute(:name).with_value('cool-name') }
+
+          it 'tells you that the target should not contain the correct value but does' do
+            subject.matches?(target)
+            expect(subject.failure_message_when_negated).to match(/expected key 'name' to not be 'cool-name', but it was 'cool-name'/)
           end
         end
 
@@ -88,6 +106,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
         it 'matches' do
           expect(have_id('some-id').matches?(target)).to be_truthy
         end
+
+        it 'has the expected negated failure message' do
+          matcher = have_id('some-id')
+
+          matcher.matches?(target)
+
+          expect(matcher.failure_message_when_negated).to match(/expected key 'id' to not be 'some-id', but it was 'some-id'/)
+        end
       end
 
       context 'id does not match' do
@@ -113,6 +139,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
         it 'matches' do
           expect(have_type('user').matches?(target)).to be_truthy
         end
+
+        it 'has the expected negated failure message' do
+          matcher = have_type('user')
+
+          matcher.matches?(target)
+
+          expect(matcher.failure_message_when_negated).to match(/expected key 'type' to not be 'user', but it was 'user'/)
+        end
       end
 
       context 'type does not match' do
@@ -137,6 +171,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
       context 'relationship is included' do
         it 'matches' do
           expect(have_relationship(:car).matches?(target)).to be_truthy
+        end
+
+        it 'has the expected negated failure message' do
+          matcher = have_relationship('some-relationship')
+
+          matcher.matches?(target)
+
+          expect(matcher.failure_message_when_negated).to match(/expected attribute 'some-relationship' not to be included in/)
         end
       end
 
@@ -167,6 +209,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
 
           it 'matches' do
             expect(have_relationship(:car).with_value(relationship_value).matches?(target)).to be_truthy
+          end
+
+          it 'has the expected negated failure message' do
+            matcher = have_relationship(:car).with_value(relationship_value)
+
+            matcher.matches?(target)
+
+            expect(matcher.failure_message_when_negated).to match(/expected key 'car' to not be '.*', but it was '.*'/)
           end
         end
 
