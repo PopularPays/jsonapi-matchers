@@ -9,6 +9,7 @@ module Jsonapi
         @attribute_name = attribute_name
         @location = location
         @failure_message = nil
+        @failure_message_when_negated = nil
         @description = description
       end
 
@@ -49,10 +50,15 @@ module Jsonapi
         @failure_message || "expected attribute '#{@attribute_name}' to be included in #{@target.as_json.ai}"
       end
 
+      def failure_message_when_negated
+        @failure_message_when_negated || "expected attribute '#{@attribute_name}' not to be included in #{@target.as_json.ai}"
+      end
+
       private
 
       def value_exists?
         if @expected_value.to_s == @value.to_s
+          @failure_message_when_negated = "expected key '#{@attribute_name}' to not be '#{@expected_value}', but it was '#{@value}'"
           true
         else
           @failure_message = "expected '#{@expected_value}' for key '#{@attribute_name}', but got '#{@value}'"
@@ -65,12 +71,14 @@ module Jsonapi
 
         if data.is_a?(Array)
           if data.map{|d| d['id']}.include?(@expected_record_id)
+            @failure_message_when_negated = "expected '#{@attribute_name}' not to contain the id '#{@expected_record_id}', but got '#{@value['data']}'"
             return true
           else
             @failure_message = "expected '#{@expected_record_id}' to be an id in relationship '#{@attribute_name}', but got '#{@value['data']}'"
             return false
           end
         elsif @expected_record_id == @value.try(:[], 'data').try(:[], 'id')
+          @failure_message_when_negated = "expected '#{@expected_record_id}' not to be the id for relationship '#{@attribute_name}', but got '#{@value}'"
           return true
         else
           @failure_message = "expected '#{@expected_record_id}' to be the id for relationship '#{@attribute_name}', but got '#{@value}'"
