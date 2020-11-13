@@ -33,7 +33,7 @@ describe Jsonapi::Matchers::RecordIncluded do
     end
 
     it 'tells you that the response body is not json' do
-      expect(subject.failure_message).to match("Expected response to be json string but was \"{\". JSON::ParserError - 765: unexpected token at '{'")
+      expect(subject.failure_message).to match(/Expected response to be json string but was \"{\". JSON::ParserError - \d\d\d: unexpected token at '{'/)
     end
   end
 
