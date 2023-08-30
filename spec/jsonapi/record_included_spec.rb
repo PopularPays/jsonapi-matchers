@@ -27,13 +27,17 @@ describe Jsonapi::Matchers::RecordIncluded do
     let(:subject) { have_record(record) }
     let(:response) { ActionDispatch::TestResponse.new(response_data) }
     let(:response_data) { '{' }
+    let(:architecture) { `uname -m`.strip }
+    let(:arm_expectation) { /Expected response to be json string but was \"{\". JSON::ParserError - unexpected token at '{'/ }
+    let(:linux_expectation) { /Expected response to be json string but was \"{\". JSON::ParserError - \d\d\d: unexpected token at '{'/ }
 
     before do
       subject.matches?(response)
     end
 
     it 'tells you that the response body is not json' do
-      expect(subject.failure_message).to match(/Expected response to be json string but was \"{\". JSON::ParserError - \d\d\d: unexpected token at '{'/)
+      expectation = architecture == 'arm64' ? arm_expectation : linux_expectation
+      expect(subject.failure_message).to match(expectation)
     end
   end
 

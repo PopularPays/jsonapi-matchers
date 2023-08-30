@@ -21,10 +21,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@v1.152.0
       with:
-        ruby-version: 2.6
-        bundler: 2.1.4
+        ruby-version: 3.1.4
+        bundler-cache: true
     - name: Install dependencies
       run: bundle install
     - name: Run tests
