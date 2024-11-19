@@ -18,14 +18,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 2.7.7"
+  spec.required_ruby_version = ">= 3.1.5"
 
-  spec.add_dependency "activesupport", ">= 4.0", "< 7.1"
+  spec.add_dependency "activesupport", ">= 7.0", "< 8"
   spec.add_dependency "awesome_print"
 
-  spec.add_development_dependency "bump", "~> 0.9.0"
+  spec.add_development_dependency "bump", "~> 0.10.0"
   spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rake", "~> 13.2"
+  spec.add_development_dependency "rspec", "~> 3.13"
   spec.add_development_dependency "pry"
 end

@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1.152.0
+      uses: ruby/setup-ruby@v1.202.0
       with:
-        ruby-version: 3.1.4
+        ruby-version: 3.3.6
         bundler-cache: true
     - name: Install dependencies
       run: bundle install
