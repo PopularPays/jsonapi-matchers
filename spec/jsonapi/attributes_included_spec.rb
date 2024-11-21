@@ -265,14 +265,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
 
       describe 'with_record' do
         context 'record exists' do
-          let(:record) { OpenStruct.new(id: 'some-car-id') }
+          let(:record) { Struct.new(:id).new('some-car-id') }
 
           it 'matches' do
             expect(have_relationship(:car).with_record(record).matches?(target)).to be_truthy
           end
 
           context 'the record id is not a string' do
-            let(:record) { OpenStruct.new(id: 3) }
+            let(:record) { Struct.new(:id).new(3) }
 
             it 'matches' do
               expect(have_relationship(:bike).with_record(record).matches?(target)).to be_truthy
@@ -281,7 +281,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
 
         context 'record id does not match' do
-          let(:record) { OpenStruct.new(id: 'not-the-right-car-id') }
+          let(:record) { Struct.new(:id).new('not-the-right-car-id') }
 
           subject { have_relationship(:car).with_record(record) }
 
@@ -296,14 +296,14 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
 
         context 'relationship is array and it matches' do
-          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+          let(:record) { Struct.new(:id).new('some-chair-id-1') }
 
           it 'matches' do
             expect(have_relationship(:chairs).with_record(record).matches?(target)).to be_truthy
           end
 
           context 'the record id is not a string' do
-            let(:record) { OpenStruct.new(id: 4) }
+            let(:record) { Struct.new(:id).new(4) }
 
             it 'matches' do
               expect(have_relationship(:telephones).with_record(record).matches?(target)).to be_truthy
@@ -312,7 +312,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
 
         context 'relationship is array and it does not match' do
-          let(:record) { OpenStruct.new(id: 'some-chair-id-3') }
+          let(:record) { Struct.new(:id).new('some-chair-id-3') }
 
           subject { have_relationship(:chairs).with_record(record) }
 
@@ -327,7 +327,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
 
         context 'relationship does not have an id attribute' do
-          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+          let(:record) { Struct.new(:id).new('some-chair-id-1') }
 
           subject { have_relationship(:house).with_record(record) }
 
@@ -342,7 +342,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
 
         context 'relationship is nil' do
-          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+          let(:record) { Struct.new(:id).new('some-chair-id-1') }
 
           subject { have_relationship(:plane).with_record(record) }
 
@@ -357,7 +357,7 @@ describe Jsonapi::Matchers::AttributesIncluded do
         end
 
         context 'relationship does not exist' do
-          let(:record) { OpenStruct.new(id: 'some-chair-id-1') }
+          let(:record) { Struct.new(:id).new('some-chair-id-1') }
 
           subject { have_relationship(:does_not_exist).with_record(record) }
 
