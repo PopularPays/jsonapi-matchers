@@ -27,7 +27,9 @@ describe Jsonapi::Matchers::RecordIncluded do
     let(:subject) { have_record(record) }
     let(:response) { ActionDispatch::TestResponse.new(response_data) }
     let(:response_data) { '{' }
-    let(:expectation) { /Expected response to be json string but was \"{\". JSON::ParserError - unexpected token at '{'/ }
+    # The JSON::ParserError message text varies across json gem versions, so
+    # only assert the prefix we control.
+    let(:expectation) { /Expected response to be json string but was \"{\". JSON::ParserError - / }
 
     before do
       subject.matches?(response)
